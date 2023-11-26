@@ -57,7 +57,17 @@ public class ProviderController {
     @GetMapping("/delete/{id}")
     public String deleteProvider(@PathVariable("id")long id)
     {
-    	service.deleteProvider(id);
+    	try {
+    	 service.findProviderById(id)
+         .orElseThrow(()-> new IllegalArgumentException("Invalid provider Id:" + id));
+    	 service.deleteProvider(id);
+    	}
+    	catch(IllegalArgumentException ex)
+    	{
+    		return "provider/500.html";
+    	}
+  
+    	
     	return "redirect:../list";	
     }
     

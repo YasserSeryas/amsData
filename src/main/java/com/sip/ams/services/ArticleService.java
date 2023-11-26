@@ -6,34 +6,34 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sip.ams.entities.Provider;
-import com.sip.ams.repositories.ProviderRepository;
+import com.sip.ams.entities.Article;
+import com.sip.ams.repositories.ArticleRepository;
 
 @Service
 public class ArticleService {
 
 	@Autowired  // Spring va se charger de créer un objet qui implémente cette interface
-	ProviderRepository providerRepository ;
+	ArticleRepository articleRepository ;
 	
 	
-	public Provider addProvider(Provider provider)
+	public Article saveArticle(Article article)
 	{
-		return providerRepository.save(provider);  // sauvegarder dans la base
+		return articleRepository.save(article);  // sauvegarder dans la base
 		
 	}
 	
-	public List<Provider> listProvider()
+	public List<Article> listArticle()
 	{
-		return (List<Provider>) providerRepository.findAll();	 // lister tous les providers de la base
+		return (List<Article>) articleRepository.findAll();	 // lister tous les articles de la base
 	}
 
-	public void deleteProvider(long id) {
-	     providerRepository.deleteById(id);
+	public void deleteArticle(long id) {
+	     articleRepository.deleteById(id);
 	}
 	
-	public Optional<Provider> findProviderById(long id)
+	public Optional<Article> findArticleById(long id)
 	{
-		return providerRepository.findById(id);
+		return articleRepository.findById(id);
 	}
 	
 }
