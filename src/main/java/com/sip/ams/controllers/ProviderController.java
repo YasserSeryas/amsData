@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +53,41 @@ public class ProviderController {
         service.addProvider(provider);
         return "redirect:list";
     }
+    
+    @GetMapping("/delete/{id}")
+    public String deleteProvider(@PathVariable("id")long id)
+    {
+    	service.deleteProvider(id);
+    	return "redirect:../list";	
+    }
+    
+    @GetMapping("edit/{id}")
+    public String showProviderFormToUpdate(@PathVariable("id") long id, Model model) {
+    	Provider provider  = null;
+    	try {
+    		provider= service.findProviderById(id)
+            .orElseThrow(()->new IllegalArgumentException("Invalid provider Id:" + id));
+    	}
+    	catch(IllegalArgumentException ex)
+    	{
+    		return "provider/500.html";
+    	}
+        model.addAttribute("provider", provider);
+        
+        return "provider/updateProvider";
+    }
+
+
+    
+    @PostMapping("update")
+    public String updateProvider(@Valid Provider provider, BindingResult result, Model model) {
+    	
+    	
+    	service.addProvider(provider);
+    	return"redirect:list";
+    	
+    }
+
 
 
 }

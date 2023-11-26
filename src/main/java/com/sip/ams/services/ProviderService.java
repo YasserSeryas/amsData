@@ -1,6 +1,7 @@
 package com.sip.ams.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,15 @@ public class ProviderService {
 	{
 		return (List<Provider>) providerRepository.findAll();	 // lister tous les providers de la base
 	}
+
+	public void deleteProvider(long id) {
+	     providerRepository.deleteById(id);
+	}
+	
+	public Optional<Provider> findProviderById(long id)
+	{
+		return providerRepository.findById(id);
+	}
+	
 
 }
