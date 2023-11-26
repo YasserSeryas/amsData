@@ -10,8 +10,8 @@ import com.sip.ams.entities.Provider;
 import com.sip.ams.repositories.ProviderRepository;
 
 @Service
-public class ProviderService {
-	
+public class ArticleService {
+
 	@Autowired  // Spring va se charger de créer un objet qui implémente cette interface
 	ProviderRepository providerRepository ;
 	
@@ -35,4 +35,5 @@ public class ProviderService {
 	{
 		return providerRepository.findById(id);
 	}
+	
 }
