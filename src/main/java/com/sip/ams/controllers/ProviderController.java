@@ -27,10 +27,14 @@ public class ProviderController {
 	
 	
 	@RequestMapping("/list")
-	@ResponseBody
-	public String list() {
+	//@ResponseBody
+	public String list(Model model) {
 		List<Provider> res = service.listProvider();
-		return res.toString();
+		//return res.toString();
+		if(res.size()==0)
+			res = null;
+		model.addAttribute("providers", res);
+		 return "provider/listProviders";
 	}
 	
 	@GetMapping("add")
@@ -41,7 +45,7 @@ public class ProviderController {
     }
     
     @PostMapping("add")
-    public String addProvider(@Valid Provider provider, BindingResult result, Model model) {
+    public String addProvider(@Valid Provider provider, BindingResult result) {
         if (result.hasErrors()) {
             return "provider/addProvider";
         }
