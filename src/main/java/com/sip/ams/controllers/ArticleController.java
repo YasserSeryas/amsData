@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,11 +72,12 @@ public class ArticleController {
     	
     	
     	MultipartFile file = files[0];
-    	Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
+    	long id = new Date().getTime();
+    	Path fileNameAndPath = Paths.get(uploadDirectory, ""+id+file.getOriginalFilename());
     	
     	StringBuilder fileName = new StringBuilder();
     	
-    	fileName.append(file.getOriginalFilename()); //nom du ficher
+    	fileName.append(""+id+file.getOriginalFilename()); //nom du ficher
 		  try {
 			Files.write(fileNameAndPath, file.getBytes()); //ecriture des bytes du fichier dans le nouveau emplacement
 		} catch (IOException e) {
