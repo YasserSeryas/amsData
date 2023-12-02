@@ -22,11 +22,15 @@ import jakarta.validation.Valid;
 @RequestMapping("/providers")
 public class ProviderController {
 	
-	@Autowired  //injection de dépendances
+	 
 	ProviderService service ;//= new ProviderService();
 	
 	
-	
+	@Autowired  //injection de dépendances
+	public ProviderController(ProviderService service) {
+		this.service = service;
+	}
+
 	@RequestMapping("/list")
 	//@ResponseBody
 	public String list(Model model) {

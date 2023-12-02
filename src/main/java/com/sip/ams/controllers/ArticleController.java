@@ -1,5 +1,9 @@
 package com.sip.ams.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +22,15 @@ import com.sip.ams.services.ArticleService;
 import com.sip.ams.services.ProviderService;
 
 import jakarta.validation.Valid;
-
+import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/articles/")
 
 public class ArticleController {
 
-	private final ArticleService articleService;
-	private final ProviderService providerService ;
+	private  ArticleService articleService;
+	private  ProviderService providerService;
+	public static String uploadDirectory = System.getProperty("user.dir")+"/src/main/resources/static/uploadArticles";
 	
     @Autowired
     public ArticleController(ArticleService articleService, ProviderService providerService) {
@@ -53,12 +58,31 @@ public class ArticleController {
     
     @PostMapping("add")
     //@ResponseBody
-    public String addArticle(@Valid Article article, BindingResult result, @RequestParam(name = "providerId", required = false) Long p) {
+    public String addArticle(@Valid Article article, BindingResult result, @RequestParam(name = "providerId", required = false) Long p,
+    		@RequestParam("files") MultipartFile[] files) {
     	
     	Provider provider = providerService.findProviderById(p)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid provider Id:" + p));
     	article.setProvider(provider);
+    	// upload de l'image
     	
+    	
+    	
+    	MultipartFile file = files[0];
+    	Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
+    	
+    	StringBuilder fileName = new StringBuilder();
+    	
+    	fileName.append(file.getOriginalFilename()); //nom du ficher
+		  try {
+			Files.write(fileNameAndPath, file.getBytes()); //ecriture des bytes du fichier dans le nouveau emplacement
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+		 article.setPicture(fileName.toString());
+
+    	// fin upload
     	 articleService.saveArticle(article);
     	 return "redirect:list";
     	
@@ -107,6 +131,17 @@ public class ArticleController {
         
         return "redirect:list";
     }
+    
+    @GetMapping("show/{id}")
+    public String showArticleDetails(@PathVariable("id") long id, Model model) {
+    	Article article = articleService.findArticleById(id)
+            .orElseThrow(()->new IllegalArgumentException("Invalid provider Id:" + id));
+    	
+        model.addAttribute("article", article);
+        
+        return "article/showArticle";
+    }
+
 
 
     
