@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,8 +78,6 @@ public class ArticleController {
     	article.setProvider(provider);
     	// upload de l'image
     	
-    	
-    	
     	MultipartFile file = files[0];
     	long id = new Date().getTime();
     	Path fileNameAndPath = Paths.get(uploadDirectory, ""+id+file.getOriginalFilename());
@@ -129,7 +128,8 @@ public class ArticleController {
 
     @PostMapping("edit")
     public String updateArticle(@Valid Article article, BindingResult result,
-        Model model, @RequestParam(name = "providerId", required = false) Long p) {
+        Model model, @RequestParam(name = "providerId", required = false) Long p,
+        @RequestParam("files") MultipartFile[] files) {
         if (result.hasErrors()) {
         	
             return "article/updateArticle";
@@ -138,6 +138,44 @@ public class ArticleController {
         Provider provider = providerService.findProviderById(p)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid provider Id:" + p));
     	article.setProvider(provider);
+    	
+    	
+    	// upload de l'image
+    	
+    	MultipartFile file = files[0];
+    	if(file.getOriginalFilename()!=null) {
+    	long id = new Date().getTime();
+    	Path fileNameAndPath = Paths.get(uploadDirectory, ""+id+file.getOriginalFilename());
+    	
+    	StringBuilder fileName = new StringBuilder();
+    	
+    	fileName.append(""+id+file.getOriginalFilename()); //nom du ficher
+		  try {
+			Files.write(fileNameAndPath, file.getBytes()); //ecriture des bytes du fichier dans le nouveau emplacement
+		
+			//delete de l'ancienne image
+
+		    	String urlImage = article.getPicture();
+		    	if(urlImage!=null) {
+		    	Path path = Paths.get(ArticleController.uploadDirectory,urlImage);
+		        
+		    	try {
+					Files.deleteIfExists(path);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	}
+			
+			//fin delete picture
+		  
+		  } catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+		 article.setPicture(fileName.toString());
+    	}
+    	//
     	
         articleService.saveArticle(article);
         
