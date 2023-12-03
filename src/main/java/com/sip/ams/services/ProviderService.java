@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sip.ams.entities.Article;
 import com.sip.ams.entities.Provider;
 import com.sip.ams.repositories.ProviderRepository;
 
@@ -34,5 +35,9 @@ public class ProviderService {
 	public Optional<Provider> findProviderById(long id)
 	{
 		return providerRepository.findById(id);
+	}
+	
+	public List<Article> findArticlesByProvider(long id){
+		return providerRepository.findArticlesByProvider(id);
 	}
 }

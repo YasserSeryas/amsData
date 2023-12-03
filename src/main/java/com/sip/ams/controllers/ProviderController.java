@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sip.ams.entities.Article;
 import com.sip.ams.entities.Provider;
 import com.sip.ams.services.ProviderService;
 
@@ -101,6 +102,24 @@ public class ProviderController {
     	return"redirect:list";
     	
     }
+    
+    @GetMapping("show/{id}")
+	public String showProvider(@PathVariable("id") long id, Model model) {
+		Provider provider = service.findProviderById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid provider Id:" + id));
+		List<Article> articles = service.findArticlesByProvider(id);
+		for (Article a : articles)
+			System.out.println("Article = " + a.getLabel());
+		
+		if(articles.size()==0)
+		{
+			articles=null;
+		}
+		model.addAttribute("articles", articles);
+		model.addAttribute("provider", provider);
+		return "provider/showProvider";
+	}
+
 
 
 

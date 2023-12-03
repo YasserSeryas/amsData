@@ -61,8 +61,16 @@ public class ArticleController {
     
     @PostMapping("add")
     //@ResponseBody
-    public String addArticle(@Valid Article article, BindingResult result, @RequestParam(name = "providerId", required = false) Long p,
+    public String addArticle(Model model,@Valid Article article, BindingResult result, @RequestParam(name = "providerId", required = false) Long p,
     		@RequestParam("files") MultipartFile[] files) {
+    	
+    	 	
+    	 if (result.hasErrors()) {
+    		 System.out.println("nb error : "+ result.getErrorCount());
+    		 // on doit récupérer de nouveaux la liste des providers en cas d'erreur
+    		 model.addAttribute("providers", providerService.listProvider());
+             return "article/addArticle";
+         }
     	
     	Provider provider = providerService.findProviderById(p)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid provider Id:" + p));

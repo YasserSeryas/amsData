@@ -8,10 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 
@@ -22,11 +26,16 @@ public class Article {
 
     @NotBlank(message = "Label is mandatory")
     @Column(name = "label")
+    @Length(min = 5, max = 20)
+
     private String label;
     
     
  
     @Column(name = "price")
+   // @NotNull(message = "Price is mandatory")
+    @Min(value = 10, message = "Le prix minimum est 10 DT")
+    @Max(value = 10_000, message = "Le prix maximim est 10 000 DT")
     private float price;
     
     @Column(name = "picture")
@@ -72,6 +81,7 @@ public class Article {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "provider_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+	//@NotNull(message = "Provider is mandatory")
     private Provider provider;
 	
 	
