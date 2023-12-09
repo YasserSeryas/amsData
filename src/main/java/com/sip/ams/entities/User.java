@@ -1,8 +1,8 @@
 package com.sip.ams.entities;
 
 import org.hibernate.validator.constraints.Length;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user")
-public class User {// implements UserDetails{
+public class User implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
@@ -98,7 +98,7 @@ public class User {// implements UserDetails{
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-/*
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
@@ -133,6 +133,6 @@ public class User {// implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return false;
-	}*/
+	}
 
 }
