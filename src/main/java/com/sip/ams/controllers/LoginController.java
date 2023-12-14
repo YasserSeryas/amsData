@@ -29,7 +29,7 @@ public class LoginController {
         return "login";
 
     }
-
+/*
     @PostMapping("")
     public String loginSubmit(Model model, @RequestParam String email, @RequestParam String password) {
         User user = userRepository.findByEmail(email);
@@ -39,7 +39,7 @@ public class LoginController {
         }
         model.addAttribute("error", "Invalid email or password");
         return "login";
-    }
+    }*/
     
     
 }

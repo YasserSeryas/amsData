@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -48,22 +49,28 @@ public class SecurityConfiguration {
                 .passwordEncoder(bCryptPasswordEncoder);
     }
 
-    @Bean
+  
+	@Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
-                .cors().and().csrf().disable()
-                .exceptionHandling().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .requestMatchers("/**").permitAll()
-                 .requestMatchers("/providers/**").hasAuthority("ADMIN")
-               .anyRequest().authenticated()
-                .and()
-        ;
+    	
+		
+		  http.csrf().disable().authorizeRequests()
+    	  .requestMatchers("/providers/**").hasAuthority("ADMIN")
+          .requestMatchers("/articles/**").hasAuthority("USER")
+    
+          .and().formLogin()
+          .loginPage("/login")
+          .failureUrl("/login?error=true")
+          .defaultSuccessUrl("/home") // page d'accueil après login avec succès
+          .usernameParameter("email") // paramètres d'authentifications login et password
+          .passwordParameter("password")
+          .and().logout()
+          .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // route de deconnexion ici /logut
+          .logoutSuccessUrl("/login");
+          
+    	  return http.build();
 
-        return http.build();
+    	
     }
 
 

@@ -10,7 +10,14 @@
 
 <div class="container">
 
+  Authenticated username:
+        <div sec:authentication="name"></div>
+        Authenticated user roles:
+        <div sec:authentication="principal.authorities"></div>
+        
+        
     <div class="starter-template">
+		<h2 th:text="${userName}">User</h2>
         <h1>Welcome to our Article Managment System Dashboard</h1>
         <h2>1. Visit our Providers, You must have ADMIN role <a th:href="@{/providers/list}">Providers</a></h2>
         <h2>2. Visit our Article, You must have USER role<a th:href="@{/articles/list}">Articles</a></h2>
