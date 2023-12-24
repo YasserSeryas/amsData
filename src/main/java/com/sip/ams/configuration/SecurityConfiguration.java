@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -57,8 +59,8 @@ public class SecurityConfiguration {
               .csrf(csrf -> csrf.disable())
               .authorizeHttpRequests(auth -> auth
                       .requestMatchers("/login","/registration","/roles/**","/accounts/**").permitAll()
-                       .requestMatchers("/providers/**").hasAuthority("ADMIN")
-                       .requestMatchers("/articles/**").hasAuthority("USER")
+                      .requestMatchers("/providers/**").hasAuthority("ADMIN")
+                      .requestMatchers("/articles/**").hasAuthority("USER")
                       .anyRequest().authenticated()
                       )
 
@@ -68,7 +70,6 @@ public class SecurityConfiguration {
                       .defaultSuccessUrl("/home",true) // page d'accueil après login avec succès
                       .usernameParameter("email") // paramètres d'authentifications login et password
                       .passwordParameter("password")
-
                       )
 
              .logout(logout -> logout
@@ -77,6 +78,24 @@ public class SecurityConfiguration {
                   );
              return http.build();
     }
+    
+    
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/images/**");
+    }
+    
+ // laisser l'accès aux ressources
+   /* @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+    }*/
+
+
+
+
   /*
 	@Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
