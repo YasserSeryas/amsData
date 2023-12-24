@@ -4,6 +4,7 @@ package com.sip.ams.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sip.ams.entities.User;
 import com.sip.ams.services.AccountService;
 
+
+
+
+
 @Controller
 @RequestMapping("/accounts/")
 
 public class AccountController {
 
-	
+
 	private final AccountService accountService;
 	
 	@Autowired
@@ -40,16 +45,16 @@ public class AccountController {
         return "user/listUsers";
     }
 	
-	@GetMapping("enable/{id}")
-    public String enableUserAcount(@PathVariable ("id") int id) {
-		accountService.enableAccount(id);
-    	return "redirect:../list";
+	@GetMapping("enable/{id}/{email}")
+	public String enableUserAcount(@PathVariable ("id") int id, @PathVariable ("email") String email) {
+		accountService.enableAccount(id,email);
+    	return "redirect:../../list";
     }
 	
-	@GetMapping("disable/{id}")
-	public String disableUserAcount(@PathVariable ("id") int id) {
-		accountService.disableAccount(id);
-    	return "redirect:../list";
+	@GetMapping("disable/{id}/{email}")
+	public String disableUserAcount(@PathVariable ("id") int id, @PathVariable ("email") String email) {
+		accountService.disableAccount(id,email);
+    	return "redirect:../../list";
     }
 
 	@PostMapping("updateRole")
@@ -63,6 +68,6 @@ public class AccountController {
     	return "redirect:list";
     }
 
-    
+	  
     
 }

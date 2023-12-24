@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 //import com.sip.ams.controllers.HashSet;
@@ -13,8 +15,12 @@ import com.sip.ams.entities.User;
 import com.sip.ams.repositories.RoleRepository;
 import com.sip.ams.repositories.UserRepository;
 
+
 @Service
 public class AccountService {
+
+	@Autowired
+    private JavaMailSender javaMailSender;
 	
 	@Autowired  // Spring va se charger de créer un objet qui implémente cette interface
 	UserRepository userRepository ;
@@ -28,15 +34,17 @@ public class AccountService {
 
 	
 	
-	public User enableAccount(int id)
+	public User enableAccount(int id, String email)
 	{
+		 sendEmail( email, true);
 		 User user = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid User Id:" + id));
 	     user.setActive(1);
 	     return userRepository.save(user);
 	}
 	
-	public User disableAccount(int id)
+	public User disableAccount(int id, String email)
 	{
+		 sendEmail( email, false);
 		 User user = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid User Id:" + id));
 	     user.setActive(0);
 	     return userRepository.save(user);
@@ -64,5 +72,27 @@ public class AccountService {
 	     userRepository.save(user);
 		
 	}
+	
+	void sendEmail(String email, boolean state) {
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+        if(state == true)
+        {
+        msg.setSubject("Account Has Been Activated");
+        msg.setText("Hello, Your account has been activated. "
+        		+ 
+        		"You can log in : http://127.0.0.1:81/login"
+        		+ " \n Best Regards!");
+        }
+        else
+        {
+        	msg.setSubject("Account Has Been disactivated");
+            msg.setText("Hello, Your account has been disactivated.");
+        }
+        javaMailSender.send(msg);
+
+    }
+
 
 }
