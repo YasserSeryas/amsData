@@ -35,7 +35,10 @@
 										<th>Name</th>
 										<th>Email</th>
 										<th>Role</th>
+										<th>Update Role</th>
 										<th>is Active</th>
+										<th>Activer</th>
+										<th>Désactiver</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -43,12 +46,24 @@
 										<td th:text="${user.id}"></td>
 										<td th:text="${user.name}"></td>
 										<td th:text="${user.email}"></td>
+										<td th:text="${user.roles[0].role}"></td>
 										<td>
-										  <ul>
-										   <li th:each="r : ${user.roles}" th:text="${r.role}"></li>
-										  </ul>
+										<form method="post" th:action="@{/accounts/updateRole}">
+											<select name="newrole" class="form-control">
+												<option value="USER">USER</option>
+												<option value="ADMIN">ADMIN</option>
+												<option value="SUPERADMIN">SUPERADMIN</option>
+											</select>
+											<br/>
+											<input type="hidden" name="id" th:value="${user.id}" th:attr="name='id'"/>
+											<input class="btn btn-primary" type="submit" value="Update role"/>
+										</form>
 										</td>
 										<td th:text="${user.active}"></td>
+										
+										<td><a th:href="@{/accounts/enable/{id} (id=${user.id})}">Activer</a></td>
+										<td><a th:href="@{/accounts/disable/{id} (id=${user.id})}">Désactiver</a></td>
+									    
 									</tr>
 								</tbody>
 							</table>
@@ -61,5 +76,6 @@
 	</div>
 </body>
 
-</html>
 
+
+</html>

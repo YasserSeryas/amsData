@@ -59,8 +59,11 @@ public class SecurityConfiguration {
               .csrf(csrf -> csrf.disable())
               .authorizeHttpRequests(auth -> auth
                       .requestMatchers("/login","/registration","/roles/**","/accounts/**").permitAll()
-                      .requestMatchers("/providers/**").hasAuthority("ADMIN")
-                      .requestMatchers("/articles/**").hasAuthority("USER")
+                      .requestMatchers("/provider/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
+                      .requestMatchers("/article/**").hasAnyAuthority("USER", "SUPERADMIN")
+
+                      // .requestMatchers("/providers/**").hasAuthority("ADMIN")
+                      //.requestMatchers("/articles/**").hasAuthority("USER")
                       .anyRequest().authenticated()
                       )
 
