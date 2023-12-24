@@ -48,16 +48,43 @@ public class SecurityConfiguration {
                 .authoritiesByUsernameQuery(rolesQuery)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
+    
+    @Bean
 
-  
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+      http
+
+              .csrf(csrf -> csrf.disable())
+              .authorizeHttpRequests(auth -> auth
+                      .requestMatchers("/login","/registration","/roles/**","/accounts/**").permitAll()
+                       .requestMatchers("/providers/**").hasAuthority("ADMIN")
+                       .requestMatchers("/articles/**").hasAuthority("USER")
+                      .anyRequest().authenticated()
+                      )
+
+              .formLogin(formLogin -> formLogin
+                      .loginPage("/login")
+                      .failureUrl("/login?error=true")
+                      .defaultSuccessUrl("/home",true) // page d'accueil après login avec succès
+                      .usernameParameter("email") // paramètres d'authentifications login et password
+                      .passwordParameter("password")
+
+                      )
+
+             .logout(logout -> logout
+                      .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // route de deconnexion ici /logut
+                      .logoutSuccessUrl("/login")
+                  );
+             return http.build();
+    }
+  /*
 	@Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-    	
-		
 		  http.csrf().disable().authorizeRequests()
     	  .requestMatchers("/providers/**").hasAuthority("ADMIN")
           .requestMatchers("/articles/**").hasAuthority("USER")
-    
+          .requestMatchers("/role/**").permitAll()
+          .requestMatchers("/accounts/**").permitAll()
           .and().formLogin()
           .loginPage("/login")
           .failureUrl("/login?error=true")
@@ -67,11 +94,8 @@ public class SecurityConfiguration {
           .and().logout()
           .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // route de deconnexion ici /logut
           .logoutSuccessUrl("/login");
-          
     	  return http.build();
-
-    	
-    }
+    }*/
 
 
 }
