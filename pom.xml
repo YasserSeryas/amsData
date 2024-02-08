@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.sip</groupId>
 	<artifactId>ams_data</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<name>ams_data</name>
 	<description>Projet Spring MVC - Data - Security - Rest de la formation
 		Fullstack</description>
@@ -70,6 +70,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>amsmvc2024</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
